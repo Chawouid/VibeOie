@@ -1,5 +1,5 @@
 /*
- * L'Oie des Brumes — règles du jeu (logique pure, sans DOM).
+ * L'Oie en Fête — règles du jeu (logique pure, sans DOM).
  * Indépendant de l'habillage graphique : modifier le style ne touche jamais à ce fichier.
  *
  * Règles appliquées (jeu de l'oie traditionnel, 63 cases, 2 dés) :

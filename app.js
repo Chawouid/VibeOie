@@ -1,5 +1,5 @@
 /*
- * L'Oie des Brumes — interface (plateau, pions, dés, animations).
+ * L'Oie en Fête — interface (plateau, pions, dés, animations).
  * Toute la logique de jeu vit dans rules.js ; ici on ne fait qu'afficher.
  */
 (function () {
@@ -7,7 +7,7 @@
   const R = window.OieRules;
   const COLS = 9, ROWS = 7;
   const STEP_MS = 260, JUMP_MS = 650;
-  const COLORS = ["#ff5d73", "#ffb347", "#f4e04d", "#7bd88f", "#2ec4b6", "#4cc9f0", "#7b8cff", "#b583ff", "#ff7ad9", "#e8eef7"];
+  const COLORS = ["#e63946", "#f77f00", "#e0a800", "#2fb344", "#0aa5a5", "#2f80ed", "#5b5bd6", "#9b51e0", "#e83e8c", "#6c757d"];
   const ICONS = { goose: "i-goose", bridge: "i-bridge", inn: "i-inn", well: "i-well", maze: "i-maze", prison: "i-prison", death: "i-death", start: "i-start", end: "i-end" };
   const $ = (id) => document.getElementById(id);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
