@@ -102,6 +102,9 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); ou
 .t-maze { color: #7c3fd8; background: linear-gradient(160deg, #eadfff, #d3bdff); border-color: #a77cf0; }
 .t-prison { color: #55627f; background: linear-gradient(160deg, #e4e9f2, #cfd7e6); border-color: #98a5bf; }
 .t-death { color: #d6355b; background: linear-gradient(160deg, #ffdbe4, #ffb9cb); border-color: #ff7c9b; }
+.t-thief { color: #b0420f; background: linear-gradient(160deg, #ffe9c9, #ffcf8f); border-color: #f5a03d; }
+.t-mirror { color: #0f8aa8; background: linear-gradient(160deg, #d9f6ff, #aee8fb); border-color: #4cc5e6; }
+.t-tide { color: #1560c4; background: linear-gradient(160deg, #cfe4ff, #8fc1ff); border-color: #4d94f0; }
 .t-start { color: #129a5e; background: linear-gradient(160deg, #e2fbb8, #c2f27a); border-color: #8bd62e; }
 .t-end { color: #e0951a; background: radial-gradient(circle, #fff6bf, #ffd95e 80%); border-color: #f2b21a; box-shadow: 0 0 0 2px #fff, 0 0 18px rgba(255, 196, 30, .7); }
 
@@ -141,6 +144,11 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); ou
 .team-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .team-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; border: 1px solid transparent; }
 .team-list li.current { background: #fff4d6; border-color: #ffc531; }
+.choice p { margin: 0 0 10px; font-weight: 700; text-align: center; }
+.choice-btns { display: grid; gap: 8px; }
+.choice-btn { display: flex; align-items: center; gap: 8px; text-align: left; }
+.choice-btn small { margin-left: auto; color: var(--muted); }
+.chip.good { background: #d9f6e6; color: var(--good); }
 .tname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tpos { color: var(--muted); font-size: .9rem; }
 .chip { font-size: .72rem; padding: 2px 7px; border-radius: 99px; background: #ffdbe4; color: var(--bad); font-weight: 600; }

@@ -8,7 +8,7 @@
   const COLS = 9, ROWS = 7;
   const STEP_MS = 260, JUMP_MS = 650;
   const COLORS = ["#e63946", "#f77f00", "#e0a800", "#2fb344", "#0aa5a5", "#2f80ed", "#5b5bd6", "#9b51e0", "#e83e8c", "#6c757d"];
-  const ICONS = { goose: "i-goose", bridge: "i-bridge", inn: "i-inn", well: "i-well", maze: "i-maze", prison: "i-prison", death: "i-death", start: "i-start", end: "i-end" };
+  const ICONS = { goose: "i-goose", bridge: "i-bridge", inn: "i-inn", well: "i-well", maze: "i-maze", prison: "i-prison", death: "i-death", tide: "i-tide", thief: "i-thief", mirror: "i-mirror", start: "i-start", end: "i-end" };
   const $ = (id) => document.getElementById(id);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -106,6 +106,7 @@
   function statusOf(p) {
     if (p.stuck) return { cls: "bad", text: p.pos === 31 ? "Au puits" : "En prison" };
     if (p.skip > 0) return { cls: "bad", text: `Auberge ×${p.skip}` };
+    if (p.mirror) return { cls: "good", text: "Miroir" };
     return null;
   }
 
@@ -175,22 +176,58 @@
     }
   }
 
+  async function playEvents(events) {
+    for (const ev of events) {
+      if (ev.type === "move") await playMove(ev);
+      else if (ev.type === "swap") {
+        ev.moves.forEach((m) => { disp[m.id] = m.to; pawns[m.id].classList.add("jumping"); });
+        layoutPawns();
+        await sleep(JUMP_MS);
+        ev.moves.forEach((m) => pawns[m.id].classList.remove("jumping"));
+      } else { say(ev.text, ev.tone); await sleep(450); }
+    }
+  }
+
+  function endOfAction() {
+    syncPawns();
+    renderPanel();
+    if (game.winner !== null) { busy = false; return showWin(); }
+    if (game.pending) return askThief();
+    busy = false;
+    $("rollBtn").hidden = false;
+    $("rollBtn").disabled = false;
+    $("rollBtn").textContent = `Lancer les dés — ${game.players[game.current].name}`;
+  }
+
+  function askThief() {
+    const pend = game.pending;
+    $("rollBtn").hidden = true;
+    $("choice").hidden = false;
+    $("choicePrompt").textContent = `${game.players[pend.id].name} : avec qui échanger sa place ?`;
+    $("choiceBtns").innerHTML = "";
+    pend.options.forEach((id) => {
+      const q = game.players[id];
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn choice-btn";
+      b.innerHTML = `<span class="dot" style="background:${COLORS[id]}"></span>${escapeHtml(q.name)} <small>case ${q.pos}</small>`;
+      b.onclick = async () => {
+        $("choice").hidden = true;
+        busy = true;
+        await playEvents(R.resolveThief(game, id));
+        endOfAction();
+      };
+      $("choiceBtns").appendChild(b);
+    });
+  }
+
   async function takeTurn() {
     if (busy || !game || game.winner !== null) return;
     busy = true;
     $("rollBtn").disabled = true;
     const [a, b] = await rollAnimation();
-    const events = R.resolveRoll(game, a, b);
-    for (const ev of events) {
-      if (ev.type === "move") await playMove(ev);
-      else { say(ev.text, ev.tone); await sleep(450); }
-    }
-    syncPawns();
-    renderPanel();
-    busy = false;
-    if (game.winner !== null) return showWin();
-    $("rollBtn").disabled = false;
-    $("rollBtn").textContent = `Lancer les dés — ${game.players[game.current].name}`;
+    await playEvents(R.resolveRoll(game, a, b));
+    endOfAction();
   }
 
   function showWin() {
@@ -235,6 +272,8 @@
     const names = Array.from($("teamNames").querySelectorAll("input")).map((inp, i) => inp.value.trim() || `Équipe ${i + 1}`);
     game = R.createGame(names);
     busy = false;
+    $("choice").hidden = true;
+    $("rollBtn").hidden = false;
     $("setup").hidden = true;
     $("game").hidden = false;
     $("log").innerHTML = "";

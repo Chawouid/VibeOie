@@ -17,6 +17,9 @@
   <symbol id="i-maze" viewBox="0 0 48 48"><path d="M6 6h36v36H6zm5 5v26h26V11zm5 5h16v16H21v-8h6v-3H18v13h-2z" fill-rule="evenodd"/></symbol>
   <symbol id="i-prison" viewBox="0 0 48 48"><path d="M6 6h36v36H6zm5 5v26h5V11zm10 0v26h5V11zm10 0v26h5V11z" fill-rule="evenodd"/></symbol>
   <symbol id="i-death" viewBox="0 0 48 48"><path d="M24 4C13 4 8 12 8 20c0 5 2 8 5 10v8h6v-4h3v4h4v-4h3v4h6v-8c3-2 5-5 5-10C40 12 35 4 24 4zM17 19a4 4 0 110 8 4 4 0 010-8zm14 0a4 4 0 110 8 4 4 0 010-8z" fill-rule="evenodd"/></symbol>
+  <symbol id="i-tide" viewBox="0 0 48 48"><path d="M3 14c5-6 9-6 14 0s9 6 14 0 9-6 14 0v6c-5-6-9-6-14 0s-9 6-14 0-9-6-14 0zm0 14c5-6 9-6 14 0s9 6 14 0 9-6 14 0v6c-5-6-9-6-14 0s-9 6-14 0-9-6-14 0z"/></symbol>
+  <symbol id="i-thief" viewBox="0 0 48 48"><path d="M24 4c-9 0-16 6-16 15v9c0 8 7 14 16 14s16-6 16-14v-9C40 10 33 4 24 4zM8 17h32v8H8zm9 1a3 3 0 100 6 3 3 0 000-6zm14 0a3 3 0 100 6 3 3 0 000-6z" fill-rule="evenodd"/></symbol>
+  <symbol id="i-mirror" viewBox="0 0 48 48"><path d="M24 2c9 0 16 8 16 18s-7 18-16 18S8 30 8 20 15 2 24 2zm0 5c-6 0-11 6-11 13s5 13 11 13 11-6 11-13S30 7 24 7zM20 40h8v3h5v3H15v-3h5zM17 22l12-12v5L17 27z" fill-rule="evenodd"/></symbol>
   <symbol id="i-start" viewBox="0 0 48 48"><path d="M10 4h4v40h-4zM16 6l24 8-24 10z"/></symbol>
   <symbol id="i-end" viewBox="0 0 48 48"><path d="M24 3l6 14 15 1-11 10 4 15-14-8-14 8 4-15L3 18l15-1z"/></symbol>
 </svg>
@@ -70,6 +73,10 @@
           <div id="die2" class="die" aria-label="Dé 2"></div>
         </div>
         <button type="button" id="rollBtn" class="btn primary big">Lancer les dés</button>
+        <div id="choice" class="choice" hidden>
+          <p id="choicePrompt"></p>
+          <div id="choiceBtns" class="choice-btns"></div>
+        </div>
       </div>
 
       <div class="card">
@@ -101,6 +108,9 @@
     <li><svg><use href="#i-maze"/></svg><b>Labyrinthe</b> (42) : retour à la case 30.</li>
     <li><svg><use href="#i-prison"/></svg><b>Prison</b> (52) : bloqué jusqu'à l'arrivée d'une autre équipe sur la case.</li>
     <li><svg><use href="#i-death"/></svg><b>Mort</b> (58) : retour à la case 1.</li>
+    <li><svg><use href="#i-thief"/></svg><b>Voleur</b> (29) : on échange sa place avec l'équipe de son choix.</li>
+    <li><svg><use href="#i-mirror"/></svg><b>Miroir</b> (38) : on rejoue, mais le prochain lancer fait avancer dans le sens inverse.</li>
+    <li><svg><use href="#i-tide"/></svg><b>Marée</b> (47) : on recule d'autant de cases qu'il y a d'équipes.</li>
     <li><b>Premier lancer :</b> 6 + 3 envoie à la case 26, 5 + 4 à la case 53.</li>
     <li><svg><use href="#i-end"/></svg>Il faut tomber <b>exactement</b> sur la case 63 : si le total dépasse, on recule d'autant de cases que l'excédent.</li>
   </ul>

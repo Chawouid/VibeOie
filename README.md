@@ -2,7 +2,7 @@
 
 Jeu de l'oie en équipes (2 à 10) jouable dans le navigateur, sans dépendance : ouvrir `index.html`.
 
-- `rules.js` : règles du jeu (logique pure, sans DOM)
+- `rules.js` : règles du jeu (logique pure, sans DOM) — oies, pont, auberge, puits, labyrinthe, prison, mort, plus Voleur (29), Miroir (38) et Marée (47)
 - `app.js` : interface (plateau en spirale, pions animés, dés, journal)
 - `index.html` / `style.css` : structure et habillage (thème clair et coloré : ciel d'été, prairie, bonbons)
 
