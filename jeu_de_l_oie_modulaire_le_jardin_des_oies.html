@@ -568,11 +568,11 @@
 
       <!-- Corps de configuration -->
       <div class="overflow-y-auto py-5 pr-1 space-y-6 flex-1">
-        <!-- 1. Choix du nombre de joueurs (2 à 6) -->
+        <!-- 1. Choix du nombre d'équipes (2 à 10) -->
         <div>
           <div class="flex items-center justify-between mb-2.5">
-            <label class="text-xs font-bold uppercase tracking-wider text-stone-600">1. Nombre de joueurs autour du plateau</label>
-            <span id="setupPlayerCountText" class="text-xs font-bold text-terracotta-500">4 joueurs</span>
+            <label class="text-xs font-bold uppercase tracking-wider text-stone-600">1. Nombre d'équipes autour du plateau</label>
+            <span id="setupPlayerCountText" class="text-xs font-bold text-terracotta-500">4 équipes</span>
           </div>
           <div class="grid grid-cols-5 gap-2.5" id="setupPlayerCountTabs">
             <button type="button" onclick="selectSetupPlayerCount(2)" data-count-btn="2" class="py-3 rounded-2xl font-title text-lg font-bold border transition">2</button>
@@ -580,6 +580,10 @@
             <button type="button" onclick="selectSetupPlayerCount(4)" data-count-btn="4" class="py-3 rounded-2xl font-title text-lg font-bold border transition">4</button>
             <button type="button" onclick="selectSetupPlayerCount(5)" data-count-btn="5" class="py-3 rounded-2xl font-title text-lg font-bold border transition">5</button>
             <button type="button" onclick="selectSetupPlayerCount(6)" data-count-btn="6" class="py-3 rounded-2xl font-title text-lg font-bold border transition">6</button>
+            <button type="button" onclick="selectSetupPlayerCount(7)" data-count-btn="7" class="py-3 rounded-2xl font-title text-lg font-bold border transition">7</button>
+            <button type="button" onclick="selectSetupPlayerCount(8)" data-count-btn="8" class="py-3 rounded-2xl font-title text-lg font-bold border transition">8</button>
+            <button type="button" onclick="selectSetupPlayerCount(9)" data-count-btn="9" class="py-3 rounded-2xl font-title text-lg font-bold border transition">9</button>
+            <button type="button" onclick="selectSetupPlayerCount(10)" data-count-btn="10" class="py-3 rounded-2xl font-title text-lg font-bold border transition">10</button>
           </div>
         </div>
 
@@ -694,11 +698,11 @@
           </div>
         </div>
 
-        <!-- Section 2 : Joueurs (2 à 6 joueurs) -->
+        <!-- Section 2 : Joueurs (2 à 10 joueurs / équipes) -->
         <div class="bg-white p-5 rounded-2xl border border-stone-200/80">
           <div class="flex items-center justify-between mb-3">
             <div>
-              <h3 class="font-bold text-sm text-stone-900">Joueurs autour du plateau (2 à 6 joueurs)</h3>
+              <h3 class="font-bold text-sm text-stone-900">Joueurs autour du plateau (2 à 10 joueurs / équipes)</h3>
               <p class="text-xs text-stone-500">Personnalisez les prénoms. Chaque joueur reçoit 1 Carte Action au départ.</p>
             </div>
             <div class="flex gap-2">
@@ -1262,7 +1266,7 @@
     /***************************************************************************
      * 3. PALETTE DES PIONS & ÉTAT DU JEU (GAME STATE)
      ***************************************************************************/
-    const DEFAULT_PLAYER_NAMES = ["Camille", "Inès", "Noé", "Lucas", "Emma", "Léo"];
+    const DEFAULT_PLAYER_NAMES = ["Camille", "Inès", "Noé", "Lucas", "Emma", "Léo", "Zoé", "Hugo", "Jade", "Adam"];
 
     const PLAYER_PALETTE = [
       { colorName: "Terracotta", hex: "#D95338", bgSoft: "#FCE4DF" },
@@ -1270,8 +1274,14 @@
       { colorName: "Vert Forêt", hex: "#2E5A44", bgSoft: "#DCE8D6" },
       { colorName: "Bleu Azur",  hex: "#3E78B2", bgSoft: "#D7E8F4" },
       { colorName: "Prune",      hex: "#7A4988", bgSoft: "#E7DFF4" },
-      { colorName: "Corail",     hex: "#E06D53", bgSoft: "#FADBD8" }
+      { colorName: "Corail",     hex: "#E8943A", bgSoft: "#FBE6CF" },
+      { colorName: "Rose",       hex: "#D9588F", bgSoft: "#FADCE9" },
+      { colorName: "Turquoise",  hex: "#1FA3A3", bgSoft: "#D3F0EF" },
+      { colorName: "Gris Ardoise", hex: "#5B6770", bgSoft: "#E2E6E9" },
+      { colorName: "Brun",       hex: "#8B5A2B", bgSoft: "#EEDFCF" }
     ];
+    const MAX_PLAYERS = 10;
+    const MIN_PLAYERS = 2;
 
     // Brouillon de configuration pour la modale de Nouvelle Partie
     let setupDraft = {
@@ -1433,14 +1443,14 @@
       return null;
     }
 
-    function createPawnSVG(colorHex, isCurrentTurn = false) {
+    function createPawnSVG(colorHex, isCurrentTurn = false, label = "", sizeClass = "w-5 h-5 sm:w-6 sm:h-6") {
       return `
-        <svg class="w-5 h-5 sm:w-6 sm:h-6 ${isCurrentTurn ? 'pawn-active' : ''}" viewBox="0 0 24 28" fill="none">
+        <svg class="${sizeClass} ${isCurrentTurn ? 'pawn-active' : ''}" viewBox="0 0 24 28" fill="none">
           <ellipse cx="12" cy="25" rx="8" ry="2.2" fill="rgba(0,0,0,0.18)"/>
           <path d="M6 23.5C6 20.5 8.5 19 12 19C15.5 19 18 20.5 18 23.5H6Z" fill="${colorHex}" stroke="#1F1D1B" stroke-width="1.5"/>
           <path d="M8.5 19L10 11.5H14L15.5 19H8.5Z" fill="${colorHex}" stroke="#1F1D1B" stroke-width="1.5" stroke-linejoin="round"/>
           <circle cx="12" cy="7.5" r="4.2" fill="${colorHex}" stroke="#1F1D1B" stroke-width="1.5"/>
-          <circle cx="10.6" cy="6.2" r="1.1" fill="rgba(255,255,255,0.45)"/>
+          ${label ? `<text x="12" y="10.2" text-anchor="middle" font-size="7" font-weight="800" fill="#fff" stroke="#1F1D1B" stroke-width="0.5" paint-order="stroke" font-family="sans-serif">${label}</text>` : `<circle cx="10.6" cy="6.2" r="1.1" fill="rgba(255,255,255,0.45)"/>`}
         </svg>
       `;
     }
@@ -1505,8 +1515,8 @@
         if (playersHere.length > 0) {
           pawnsHTML = `
             <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-              <div class="flex -space-x-2 items-center justify-center bg-white/75 backdrop-blur-[1px] px-1 py-0.5 rounded-full shadow-sm">
-                ${playersHere.map(p => createPawnSVG(p.color, p.id === currentPlayer.id)).join("")}
+              <div class="flex flex-wrap ${playersHere.length > 2 ? 'gap-0' : '-space-x-2'} items-center justify-center bg-white/80 backdrop-blur-[1px] px-1 py-0.5 rounded-xl shadow-sm max-w-full">
+                ${playersHere.map(p => createPawnSVG(p.color, p.id === currentPlayer.id, String(gameState.players.indexOf(p) + 1), playersHere.length > 4 ? "w-3 h-3 sm:w-4 sm:h-4" : playersHere.length > 2 ? "w-3.5 h-3.5 sm:w-4 sm:h-4" : "w-5 h-5 sm:w-6 sm:h-6")).join("")}
               </div>
             </div>
           `;
@@ -1755,7 +1765,7 @@
             <div class="flex items-center justify-between gap-3">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-8 h-9 flex items-center justify-center shrink-0">
-                  ${createPawnSVG(p.color, isTurn)}
+                  ${createPawnSVG(p.color, isTurn, String(idx + 1))}
                 </div>
                 <div class="min-w-0">
                   <div class="flex items-center gap-1.5">
@@ -1882,6 +1892,7 @@
       }, 65);
     }
 
+    // Déplacement animé case par case (avec rebond éventuel sur la case 63)
     function movePlayerAndResolveCell(player, steps) {
       const startPos = player.position;
       let targetPos = startPos + steps;
@@ -1897,8 +1908,37 @@
         }
       }
 
+      // Chemin parcouru, case par case
+      const path = [];
+      let cur = startPos;
+      let dir = 1;
+      for (let i = 0; i < steps; i++) {
+        if (cur + dir > gameState.maxCell || cur + dir < 1) {
+          if (!gameState.config.exactBounce) break;
+          dir = -dir;
+        }
+        cur += dir;
+        path.push(cur);
+      }
+      if (path.length === 0 || path[path.length - 1] !== targetPos) path.push(targetPos);
+
+      const stepDelay = Math.max(70, Math.min(220, 1400 / path.length));
+      let i = 0;
+      const stepTimer = setInterval(() => {
+        player.position = path[i];
+        playSoundEffect("step");
+        renderBoard();
+        renderPlayersList();
+        i++;
+        if (i >= path.length) {
+          clearInterval(stepTimer);
+          setTimeout(() => resolveLanding(player, steps, startPos, targetPos, bounced), 200);
+        }
+      }, stepDelay);
+    }
+
+    function resolveLanding(player, steps, startPos, targetPos, bounced) {
       player.position = targetPos;
-      playSoundEffect("step");
 
       if (bounced) {
         addHistoryLog(`${player.name} lance ${steps}, dépasse 63 et rebondit sur la case ${targetPos}.`);
@@ -2140,7 +2180,7 @@
 
     function selectSetupPlayerCount(count) {
       saveCurrentSetupTypedNames();
-      setupDraft.playerCount = Math.min(6, Math.max(2, count));
+      setupDraft.playerCount = Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, count));
       renderSetupPlayerCountTabs();
       renderSetupPlayerNameInputs();
     }
@@ -2160,7 +2200,7 @@
     }
 
     function renderSetupPlayerCountTabs() {
-      document.getElementById("setupPlayerCountText").textContent = `${setupDraft.playerCount} joueurs`;
+      document.getElementById("setupPlayerCountText").textContent = `${setupDraft.playerCount} équipes`;
       document.querySelectorAll("[data-count-btn]").forEach(btn => {
         const btnVal = parseInt(btn.getAttribute("data-count-btn"), 10);
         if (btnVal === setupDraft.playerCount) {
@@ -2317,8 +2357,8 @@
     }
 
     function addPlayerSlot() {
-      if (gameState.players.length >= 6) {
-        showToast("Maximum 6 joueurs autour du plateau.");
+      if (gameState.players.length >= MAX_PLAYERS) {
+        showToast("Maximum 10 joueurs autour du plateau.");
         return;
       }
       const idx = gameState.players.length;
