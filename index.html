@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Le Jardin des Oies</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🪿</span>
+      <div>
+        <h1>Le Jardin des Oies</h1>
+        <p>Le plaisir de jouer en équipes</p>
+      </div>
+    </div>
+    <nav class="topnav">
+      <button class="nav-btn active" data-open="">La partie</button>
+      <button class="nav-btn" data-open="setupModal">Nouvelle partie</button>
+      <button class="nav-btn" data-open="settingsModal">Paramètres</button>
+      <button class="nav-btn" data-open="devModal">API Actions (IA / Dev)</button>
+      <button class="nav-btn" data-open="rulesModal">Comment jouer</button>
+      <button class="nav-btn icon" id="soundBtn" title="Activer / couper les bruitages">🔊</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="board-col">
+      <div class="board-head">
+        <div>
+          <span class="eyebrow">Le jardin des oies</span>
+          <span id="boardInfo" class="muted"></span>
+        </div>
+        <div class="board-actions">
+          <button class="btn ghost small" data-open="allCellsModal">Toutes les actions</button>
+          <button class="btn ghost small" id="newBoardBtn">🔀 Nouveau plateau</button>
+        </div>
+      </div>
+
+      <div class="board-frame">
+        <div class="board-wrap" id="boardWrap">
+          <div class="board-grid" id="boardGrid"></div>
+          <div class="pawn-layer" id="pawnLayer"></div>
+        </div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside class="side-col">
+      <div class="card" id="turnCard">
+        <div class="card-top"><span class="eyebrow">À votre tour</span><span class="muted" id="roundLabel"></span></div>
+        <h2 id="turnTitle"></h2>
+        <p class="muted" id="turnSubtitle"></p>
+        <div class="dice-row">
+          <div class="die" id="die1"></div>
+          <div class="die" id="die2"></div>
+          <div class="dice-total"><strong id="rollTotal">–</strong><small id="rollInfo">Pas encore de lancer</small></div>
+        </div>
+        <div id="actionBanner" class="banner hidden"></div>
+        <button class="btn primary big" id="rollBtn">🎲 Lancer les dés</button>
+        <div class="hand" id="handBox"></div>
+        <button class="btn link small" id="drawChanceBtn">🍀 Tirer une carte Chance (test)</button>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Autour du plateau</h3><span class="badge" id="teamCount"></span></div>
+        <div id="playersList" class="players-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-top"><h3>Ça vient de se passer</h3></div>
+        <ul id="history" class="history"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <span>Il faut tomber pile sur la case 63 pour gagner. Sinon, on recule !</span>
+    <span id="saveInfo">● Partie sauvegardée automatiquement</span>
+  </footer>
+
+  <!-- ===================== MODALES ===================== -->
+
+  <div class="modal hidden" id="setupModal">
+    <div class="dialog wide">
+      <div class="dialog-head">
+        <div><h2>Nouvelle partie</h2><p class="muted">Choisissez le nombre d'équipes (2 à 10), leurs noms, puis lancez le jeu.</p></div>
+        <button class="close" data-close>✕</button>
+      </div>
+      <div class="dialog-body">
+        <div class="field">
+          <div class="field-head"><label>1. Nombre d'équipes</label><strong id="setupCountText"></strong></div>
+          <div class="count-grid" id="countGrid"></div>
+        </div>
+        <div class="field">
+          <div class="field-head"><label>2. Noms et pions des équipes</label><button class="btn link small" id="resetNamesBtn">Réinitialiser les noms</button></div>
+          <div class="names-grid" id="namesGrid"></div>
+        </div>
+        <div class="field">
+          <div class="field-head"><label>3. Options du plateau</label></div>
+          <div class="options-grid">
+            <div class="opt"><span>Densité de cases Action <strong id="coverageVal"></strong></span><input type="range" id="coverageInput" min="10" max="90" step="5" /></div>
+            <div class="opt"><span>Cartes Action reçues / tour <strong id="dropVal"></strong></span><input type="range" id="dropInput" min="0" max="100" step="5" /></div>
+            <div class="opt"><span>Nombre de dés</span>
+              <div class="seg"><button type="button" data-dice="1">1 dé</button><button type="button" data-dice="2">2 dés</button></div></div>
+            <label class="opt check"><input type="checkbox" id="bounceInput" /> Rebond si on dépasse la case 63</label>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <span class="muted">Chaque équipe démarre en <strong>case 1</strong> avec <strong>1 carte Action</strong>.</span>
+        <div class="foot-btns">
+          <button class="btn ghost" id="resumeBtn">Reprendre la partie en cours</button>
+          <button class="btn primary" id="startBtn">🎲 Lancer la partie</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="settingsModal">
+    <div class="dialog wide">
+      <div class="dialog-head">
+        <div><h2>Paramètres des actions</h2><p class="muted">Poids de tirage et usages autorisés de chaque action. Un poids de 0 la désactive.</p></div>
+        <button class="close" data-close>✕</button>
+      </div>
+      <div class="dialog-body">
+        <table class="weights"><thead><tr><th>Action</th><th>Poids</th><th>Plateau</th><th>Chance</th><th>Main</th></tr></thead><tbody id="weightsBody"></tbody></table>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn link" id="resetWeightsBtn">Rétablir les poids par défaut</button>
+        <div class="foot-btns">
+          <button class="btn ghost" id="applySettingsBtn">Appliquer</button>
+          <button class="btn primary" id="applyRegenBtn">Appliquer et nouveau plateau</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="devModal">
+    <div class="dialog wide">
+      <div class="dialog-head">
+        <div><h2>API Actions (IA / Dev)</h2><p class="muted">Collez un objet d'action JavaScript (ES6) pour l'injecter à chaud, ou copiez le contrat à donner à une IA.</p></div>
+        <button class="close" data-close>✕</button>
+      </div>
+      <div class="dialog-body">
+        <pre class="contract" id="contractBox"></pre>
+        <div class="field">
+          <div class="field-head"><label>Votre objet action</label><button class="btn link small" id="copyPromptBtn">📋 Copier le prompt pour une IA</button></div>
+          <textarea id="actionCode" spellcheck="false" rows="14"></textarea>
+          <div id="actionFeedback" class="feedback"></div>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <button class="btn link" id="loadExampleBtn">Charger un exemple</button>
+        <button class="btn primary" id="injectBtn">⚡ Injecter l'action</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="allCellsModal">
+    <div class="dialog wide">
+      <div class="dialog-head"><div><h2>Toutes les actions</h2><p class="muted">Catalogue des actions disponibles.</p></div><button class="close" data-close>✕</button></div>
+      <div class="dialog-body"><div class="catalog" id="catalog"></div></div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="rulesModal">
+    <div class="dialog">
+      <div class="dialog-head"><h2>Comment jouer ?</h2><button class="close" data-close>✕</button></div>
+      <div class="dialog-body rules">
+        <p><strong>1. Objectif.</strong> Soyez la première équipe à atteindre exactement la <strong>case 63</strong>. Si votre lancer dépasse 63, vous reculez du nombre de cases en trop (rebond).</p>
+        <p><strong>2. Équipes.</strong> De 2 à 10 équipes jouent à tour de rôle. Chaque pion porte le numéro de son équipe.</p>
+        <p><strong>3. Plateau dynamique.</strong> Les actions sont réparties au hasard à chaque partie selon la densité choisie et le poids de chaque action.</p>
+        <p><strong>4. Cartes Chance.</strong> Certaines cases font piocher une carte Chance dont l'effet s'applique aussitôt.</p>
+        <p><strong>5. Cartes Action.</strong> En fin de tour, une équipe peut recevoir une carte Action (3 maximum en main). Jouez-la avant de lancer les dés.</p>
+        <p><strong>6. Nouvelles actions.</strong> Le bouton « API Actions » permet d'injecter vos propres actions à chaud.</p>
+      </div>
+      <div class="dialog-foot"><span></span><button class="btn primary" data-close>C'est compris !</button></div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="chanceModal">
+    <div class="dialog small center">
+      <div class="big-icon" id="chanceIcon"></div>
+      <span class="eyebrow" id="chanceKicker">Carte Chance tirée !</span>
+      <h2 id="chanceTitle"></h2>
+      <p class="muted" id="chanceDesc"></p>
+      <button class="btn primary big" id="chanceOk">Appliquer l'effet</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="victoryModal">
+    <div class="dialog small center">
+      <div class="big-icon">🏆</div>
+      <span class="eyebrow">Victoire !</span>
+      <h2 id="victoryName"></h2>
+      <p class="muted">Elle a atteint la case 63 en plein cœur du jardin.</p>
+      <div class="foot-btns center">
+        <button class="btn ghost" id="victorySetupBtn">Changer les équipes</button>
+        <button class="btn primary" id="victoryAgainBtn">Rejouer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="actions.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
