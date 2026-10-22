@@ -1,16 +1,10 @@
-# Le Jardin des Oies
+# L'Oie des Brumes
 
-Jeu de l'oie en équipes (2 à 10), sans dépendance : ouvrir `index.html` dans un navigateur.
+Jeu de l'oie en équipes (2 à 10) jouable dans le navigateur, sans dépendance : ouvrir `index.html`.
 
-- `index.html` : structure de la page et fenêtres (nouvelle partie, paramètres, API Actions, règles…)
-- `style.css` : présentation
-- `actions.js` : registre des actions (`registerGooseAction`) et actions de base
-- `game.js` : moteur (plateau en spirale, tours, pions animés, cartes, sauvegarde automatique)
+- `rules.js` : règles du jeu (logique pure, sans DOM)
+- `app.js` : interface (plateau en spirale, pions animés, dés, journal)
+- `index.html` / `style.css` : structure et habillage (thème « nuit polaire / aurores »)
 
-## Ajouter une action
-
-Via le bouton **« API Actions (IA / Dev) »** (injection à chaud, conservée dans la sauvegarde) ou en appelant
-`registerGooseAction(actionObject)` dans `actions.js`. Le contrat complet (champs `id`, `name`, `description`,
-`icon`, `theme`, `defaultWeight`, `canBeOnBoard`, `canBeChanceCard`, `canBePlayerCard`,
-`execute(gameState, playerId, context)` → `{ gameState, message, extraTurn, triggerChanceCard }`)
-est affiché dans cette fenêtre.
+L'habillage (couleurs, pictogrammes SVG, ambiance) est isolé dans `style.css` et le sprite SVG de `index.html` :
+on peut le changer entièrement sans toucher aux règles.
